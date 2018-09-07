@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <resourceExtensions />
+    <wildcardResourcePatterns>
+      <entry name="!?*.java" />
+      <entry name="!?*.form" />
+      <entry name="!?*.class" />
+      <entry name="!?*.groovy" />
+      <entry name="!?*.scala" />
+      <entry name="!?*.flex" />
+      <entry name="!?*.kt" />
+      <entry name="!?*.clj" />
+      <entry name="!?*.aj" />
+    </wildcardResourcePatterns>
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="false">
+        <processorPath useClasspath="true" />
+      </profile>
+      <profile default="false" name="Annotation profile for pinyougo-pojo" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="pinyougo-pojo" />
+      </profile>
+      <profile default="false" name="Annotation profile for pinyougo-manager-web" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="pinyougo-manager-web" />
+      </profile>
+      <profile default="false" name="Annotation profile for pinyougo-dao" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="pinyougo-dao" />
+      </profile>
+      <profile default="false" name="Annotation profile for pinyougo-common" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="pinyougo-common" />
+      </profile>
+      <profile default="false" name="Annotation profile for pinyougo-sellergoods-service" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="pinyougo-sellergoods-service" />
+      </profile>
+      <profile default="false" name="Annotation profile for pinyougo-sellergoods-interface" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="pinyougo-sellergoods-interface" />
+      </profile>
+      <profile default="false" name="Annotation profile for pinyougo-shop-web" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="pinyougo-shop-web" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="pinyougo-common" target="1.8" />
+      <module name="pinyougo-dao" target="1.8" />
+      <module name="pinyougo-manager-web" target="1.8" />
+      <module name="pinyougo-parent" target="1.8" />
+      <module name="pinyougo-pojo" target="1.8" />
+      <module name="pinyougo-sellergoods-interface" target="1.8" />
+      <module name="pinyougo-sellergoods-service" target="1.8" />
+      <module name="pinyougo-shop-web" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

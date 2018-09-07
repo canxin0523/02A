@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- 页面meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>规格管理</title>
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+	<link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../plugins/adminLTE/css/AdminLTE.css">
+	<link rel="stylesheet" href="../plugins/adminLTE/css/skins/_all-skins.min.css">
+	<link rel="stylesheet" href="../css/style.css">
+	<script src="../plugins/jQuery/jquery-2.2.3.min.js"></script>
+	<script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../plugins/angularjs/angular.min.js" charset="utf-8"></script>
+
+	<!-- 分页组件开始 -->
+	<script src="../plugins/angularjs/pagination.js"></script>
+	<link rel="stylesheet" href="../plugins/angularjs/pagination.css">
+	<!-- 分页组件结束 -->
+    <script type="text/javascript">
+		var appp = angular.module('myApp', []);
+		var app = angular.module('pinyougou',['pagination']);
+		app.controller('specicontroller',function($scope,$http){
+
+			//重新加载列表 数据
+			$scope.reloadList=function(){
+				//切换页码
+				$scope.search( $scope.paginationConf.currentPage, $scope.paginationConf.itemsPerPage);
+			}
+
+
+			$scope.paginationConf = {
+				currentPage: 1,
+				totalItems: 10,
+				itemsPerPage: 10,
+				perPageOptions: [10, 20, 30, 40, 50],
+				onChange: function(){
+					$scope.reloadList();//重新加载
+				}
+			};
+
+			/*
+				分页查询  加条件查询
+			 */
+			$scope.searchEntity = {};
+			//品牌列表查询
+			$scope.search = function(page, rows) {
+				$http.post('../speci/search.do?page='+page+"&rows="+rows, $scope.searchEntity).success(
+						function(response) {
+							$scope.paginationConf.totalItems = response.total;
+							$scope.list = response.rows;
+						}
+				)
+			}
+
+			//新增选项行
+			$scope.addTableRow=function(){
+				$scope.entity.specificationOptionList.push({});
+			}
+			//批量选项删除
+			$scope.deleTableRow=function(index){
+				$scope.entity.specificationOptionList.splice(index,1);//删除
+			}
+
+				//保存
+			$scope.save=function(){
+				var methed = "add";
+				if($scope.entity.specification.id!=null){//如果有ID
+					methed  = "update";
+				}
+				$http.post('../speci/'+ methed +'.do',$scope.entity ).success(
+						function(response){
+							if(response.success){
+								$scope.reloadList();//刷新列表
+							}
+						}
+				);
+			}
+			/**
+			 * 删除方法
+			 */
+//			 * 			$scope.selectIds=[];//选中的ID集合
+			//定义一个空的id 集合
+			$scope.idss = [];
+//						 //更新复选
+			/*
+			更新复选框   如果 选中就添加到数组中  否则删除
+			 */
+			$scope.updateSelection = function ($event,id){
+				if($event.target.checked){   //这是判断是否被选中  如果是  就添加到数组中
+						$scope.idss.push(id);
+				}else{
+					//获取点击的下标 然后从数组中移除掉
+					var idx = $scope.idss.indexOf(id);
+					$scope.idss.splice(idx,1);
+				}
+			}
+//						 $scope.updateSelection = function($event, id) {
+//							if($event.target.checked){//如果是被选中,则增加到数组
+//								$scope.selectIds.push( id);
+//							}else{
+//								var idx = $scope.selectIds.indexOf(id);
+//								$scope.selectIds.splice(idx, 1);//删除
+//							}
+//						}
+//						 //批量删除
+						$scope.dele = function (){
+							//获取选中的复选框
+							$http.get('../speci/delete.do?ids='+$scope.idss).success(
+									function(response){
+										if(response.success){
+											//刷新列表
+											$scope.reloadList();
+										}
+									}
+							)
+						}
+//						 $scope.dele=function(){
+//							//获取选中的复选框
+//							$http.get('../brand/delete.do?ids='+$scope.selectIds).success(
+//									function(response){
+//
+//										if(response.success){
+//
+//									$scope.reloadList();//刷新列表
+//									}
+//								}
+//							);
+//						}
+					$scope.findOne=function(id){
+						$http.get('../speci/findOne.do?id='+id).success(
+								function(response){
+									$scope.entity= response;
+								}
+						);
+					}
+		})
+
+	</script>
+</head>
+
+<body class="hold-transition skin-red sidebar-mini"  ng-app="pinyougou" ng-controller="specicontroller" >
+  <!-- .box-body -->                
+                    <div class="box-header with-border">
+                        <h3 class="box-title">规格管理</h3>
+                    </div>
+                    <div class="box-body">
+                        <!-- 数据表格 -->
+                        <div class="table-box">
+
+                            <!--工具栏-->
+                            <div class="pull-left">
+                                <div class="form-group form-inline">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-default" title="新建" ng-click="entity={'specificationOptionList':[]}" data-toggle="modal" data-target="#editModal" ><i class="fa fa-file-o"></i> 新建</button>
+                                        <button type="button" class="btn btn-default" title="删除" ng-click="dele()"><i class="fa fa-trash-o"></i> 删除</button>
+                                        
+                                        <button type="button" class="btn btn-default" title="刷新"  ng-click="reloadList()"><i class="fa fa-refresh"></i> 刷新</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-tools pull-right">
+                                <div class="has-feedback">
+							                    规格名称：<input  ng-model="searchEntity.specName">
+									<button class="btn btn-default" ng-click="reloadList()">查询</button>
+                                </div>
+                            </div>
+                            <!--工具栏/-->
+			                  <!--数据列表-->
+			                  <table id="dataList" class="table table-bordered table-striped table-hover dataTable">
+			                      <thead>
+			                          <tr>
+			                              <th class="" style="padding-right:0px">
+			                                  <input id="selall" type="checkbox" class="icheckbox_square-blue">
+			                              </th> 
+										  <th class="sorting_asc">规格ID</th>
+									      <th class="sorting">规格名称</th>									     												
+					                      <th class="text-center">操作</th>
+			                          </tr>
+			                      </thead>
+			                      <tbody>
+			                          <tr ng-repeat="entity in list">
+			                              <td><input  type="checkbox" ng-click="updateSelection($event,entity.id)"></td>
+				                          <td>{{entity.id}}</td>
+									      <td>{{entity.specName}}</td>
+		                                  <td class="text-center">                                           
+		                                 	  <button type="button" class="btn bg-olive btn-xs" data-toggle="modal" ng-click="findOne(entity.id)" data-target="#editModal">修改</button>
+		                                  </td>
+			                          </tr>
+			                      </tbody>
+			                  </table>
+							<tm-pagination conf="paginationConf"></tm-pagination>
+			                  <!--数据列表/-->    
+                        </div>
+                        <!-- 数据表格 /--> 
+                     </div>
+                    <!-- /.box-body -->                    
+	          		    
+                                
+<!-- 编辑窗口 -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" >
+	<div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="myModalLabel">规格编辑</h3>
+		</div>
+		<div class="modal-body">							
+			
+			<table class="table table-bordered table-striped"  width="800px">
+		      	<tr>
+		      		<td>规格名称</td>
+		      		<td>
+						<input ng-model="entity.specification.specName"  class="form-control" placeholder="规格名称" >
+					</td>
+		      	</tr>
+			 </table>				
+			 
+			 <!-- 规格选项 -->
+			 <div class="btn-group">
+                  <button type="button" class="btn btn-default" title="新建" ng-click="addTableRow()" ><i class="fa fa-file-o"></i> 新增规格选项</button>
+                  
+             </div>
+			 
+			 <table class="table table-bordered table-striped table-hover dataTable">
+                    <thead>
+					<tr>
+				      <th class="sorting">规格选项</th>
+				      <th class="sorting">排序</th>																
+                      <th class="sorting">操作</th>
+					</tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="pojo in entity.specificationOptionList">
+				            <td>
+				            	<input   class="form-control" ng-model="pojo.optionName" placeholder="规格选项">
+				            </td>
+				            <td>
+				            	<input  class="form-control" ng-model="pojo.orders" placeholder="排序">
+				            </td>
+							<td>
+								<button type="button" class="btn btn-default" title="删除" ng-click="deleTableRow($index)"><i class="fa fa-trash-o"></i> 删除</button>
+							</td>
+                      </tr>
+                    </tbody>
+			  </table> 
+			
+			
+		</div>
+		<div class="modal-footer">						
+			<button class="btn btn-success" data-dismiss="modal" aria-hidden="true"  ng-click="save()">保存</button>
+			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</button>
+		</div>
+	  </div>
+	</div>
+</div>    
+
+</body>
+
+</html>
